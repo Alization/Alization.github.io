@@ -48,7 +48,7 @@ h3{font-size:18px;margin:0 0 8px}
 
 /* hero */
 .hero{padding:0;overflow:hidden;background:var(--paper)}
-.hero svg{display:block;width:100%;height:auto;border-bottom:var(--line)}
+.hero > svg{display:block;width:100%;height:auto;border-bottom:var(--line)}
 .hero .txt{padding:14px 16px 16px;text-align:center}
 .hero h1{font-size:26px;margin:0;letter-spacing:1px}
 .hero .sub{font-size:14px;opacity:.75}
@@ -71,7 +71,7 @@ h3{font-size:18px;margin:0 0 8px}
 .tabs button[aria-selected="true"]:nth-child(3){background:var(--water)}
 
 .dayhead{padding:0;overflow:hidden}
-.dayhead svg{display:block;width:100%;height:auto;border-bottom:var(--line)}
+.dayhead > svg{display:block;width:100%;height:auto;border-bottom:var(--line)}
 .dayhead .t{padding:10px 16px 12px;font-size:17px}
 
 /* timeline */
@@ -148,6 +148,32 @@ h2 .deco{margin-left:auto;font-size:14px;opacity:.6;letter-spacing:2px}
 footer{font-size:14px;opacity:.8}
 .hero .txt h1::before,.hero .txt h1::after{content:"✿";color:var(--coral);font-size:18px;margin:0 8px;vertical-align:4px}
 .hero .txt h1::after{color:var(--water)}
+
+
+/* ===== weather ===== */
+.wx{margin-top:12px;text-align:left;background:var(--paper);border:var(--line);border-radius:18px;padding:10px 12px}
+.wx .row{display:flex;align-items:center;gap:10px}
+.wx .big{font-size:34px;line-height:1}
+.wx .temp{font-size:26px;font-weight:700}
+.wx .meta{font-size:13px;opacity:.75}
+.wxfoot button{white-space:nowrap;flex:none;font:inherit;font-size:13px;color:var(--ink);background:var(--green);border:2.5px solid var(--ink);border-radius:999px;padding:2px 10px;margin-left:auto;cursor:pointer}
+.daywx{display:flex;flex-direction:column;gap:6px;padding:0 16px 12px}
+.wxchip{font-size:14px;background:var(--soft);border:2.5px solid var(--ink);border-radius:14px;padding:6px 10px}
+.wxchip b{font-weight:700}
+.wxchip .meta{font-size:12px;opacity:.75}
+
+
+.wxrow{display:flex;align-items:center;gap:10px}
+.wxi{width:54px;height:56px;flex:none}
+.wxi svg{width:100%;height:100%;display:block;overflow:visible}
+.wxcols{flex:1;display:grid;grid-template-columns:1.4fr 1fr .8fr;gap:6px;text-align:center}
+.wxcols div{background:#fff;border:2.5px solid var(--ink);border-radius:12px;padding:3px 2px;line-height:1.25}
+.wxcols div:nth-child(2){background:#FBE3DD}
+.wxcols div:nth-child(3){background:#E3F1F7}
+.wxcols small{display:block;font-size:11px;opacity:.7}
+.wxcols b{font-size:15px;white-space:nowrap}
+.wxfoot{display:flex;align-items:center;gap:8px;font-size:12px;opacity:.85;margin-top:6px}
+.wxfoot span{flex:1}
 
 /* motion */
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
@@ -232,6 +258,7 @@ footer{font-size:14px;opacity:.8}
       <div><b id="cd-m">–</b><span>分鐘</span></div>
     </div>
     <div class="sub" id="cd-note" style="margin-top:8px">距離 12/4 早上 9:00 出發</div>
+    <div class="wx" id="wx-now" aria-live="polite"><div class="wxfoot"><span>⛅ 天氣載入中…</span></div></div>
   </div>
 </section>
 
@@ -347,6 +374,117 @@ const store = {
   set(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
 };
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ---------- weather (Open-Meteo) ---------- */
+const LOCS = [
+  {k:'xc', n:'新城・飯店',  lat:24.1154, lon:121.6402},
+  {k:'sa', n:'蘇澳・南方澳', lat:24.5827, lon:121.8670},
+  {k:'sf', n:'壽豐・志學',  lat:23.9067, lon:121.5310}
+];
+const DAYWX = [
+  {date:'2026-12-04', locs:['sa','xc']},
+  {date:'2026-12-05', locs:['sf','xc']},
+  {date:'2026-12-06', locs:['xc']}
+];
+const WMO = c => (
+  c===0?['☀️','晴']:c===1?['🌤️','大致晴朗']:c===2?['⛅','多雲']:c===3?['☁️','陰天']:
+  (c===45||c===48)?['🌫️','有霧']:(c>=51&&c<=57)?['🌦️','毛毛雨']:
+  (c===61)?['🌧️','小雨']:(c===63)?['🌧️','下雨']:(c===65)?['🌧️','大雨']:(c===66||c===67)?['🌧️','凍雨']:
+  (c>=71&&c<=77)?['❄️','下雪']:(c>=80&&c<=82)?['🌦️','陣雨']:(c>=95)?['⛈️','雷雨']:['🌈','—']
+);
+let WX = null, WXERR = false;
+async function loadWx(force){
+  const cached = store.get('hl-wx');
+  if (!force && cached && Date.now()-cached.at < 30*60*1000){ WX = cached; return; }
+  const u = 'https://api.open-meteo.com/v1/forecast'
+    + '?latitude=' + LOCS.map(l=>l.lat).join(',')
+    + '&longitude=' + LOCS.map(l=>l.lon).join(',')
+    + '&current=temperature_2m,apparent_temperature,weather_code,wind_speed_10m'
+    + '&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,sunrise,sunset'
+    + '&timezone=Asia%2FTaipei&forecast_days=16';
+  try{
+    const r = await fetch(u);
+    if (!r.ok) throw new Error(r.status);
+    let data = await r.json();
+    if (!Array.isArray(data)) data = [data];
+    const by = {}; LOCS.forEach((l,i)=> by[l.k] = data[i]);
+    WX = {at:Date.now(), by};
+    WXERR = false;
+    store.set('hl-wx', WX);
+  }catch(e){
+    WXERR = true;
+    if (cached) WX = cached;
+  }
+}
+const hhmm = t => t ? t.slice(11,16) : '';
+const ago = at => { const m = Math.round((Date.now()-at)/60000); return m<1?'剛剛':m<60?m+' 分鐘前':Math.round(m/60)+' 小時前'; };
+/* flat SVG weather icons */
+function wxKind(c){
+  if (c===0||c===1) return 'sun';
+  if (c===2) return 'part';
+  if (c===3) return 'cloud';
+  if (c===45||c===48) return 'fog';
+  if (c>=71&&c<=77) return 'snow';
+  if (c>=95) return 'storm';
+  if ((c>=51&&c<=67)||(c>=80&&c<=82)) return 'rain';
+  return 'cloud';
+}
+function wxIcon(c){
+  const S='stroke="#3E3A39" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"';
+  const sun=(x,y,r)=>`<g class="a-spin"><g ${S}>${[0,45,90,135,180,225,270,315].map(a=>{const t=a*Math.PI/180;return `<line x1="${x+Math.cos(t)*(r+4)}" y1="${y+Math.sin(t)*(r+4)}" x2="${x+Math.cos(t)*(r+9)}" y2="${y+Math.sin(t)*(r+9)}"/>`}).join('')}</g></g><circle cx="${x}" cy="${y}" r="${r}" fill="#F6D27A" ${S}/>`;
+  const cloud=(dx,dy,fill)=>`<path transform="translate(${dx} ${dy})" d="M10 40 q-8 0 -8-8 q0-8 9-8 q2-11 14-11 q10 0 13 9 q11-1 11 9 q0 9 -10 9 z" fill="${fill||'#fff'}" ${S}/>`;
+  const k=wxKind(c); let g='';
+  if(k==='sun') g=sun(30,30,13);
+  else if(k==='part') g=sun(36,22,10)+`<g class="a-sway">${cloud(2,10)}</g>`;
+  else if(k==='cloud') g=`<g class="a-sway">${cloud(4,6)}</g>`;
+  else if(k==='fog') g=`<g class="a-sway">${cloud(4,0)}</g><g ${S}><line x1="10" y1="48" x2="46" y2="48"/><line x1="16" y1="55" x2="52" y2="55"/></g>`;
+  else if(k==='rain') g=`${cloud(4,-2,'#A8D3E6')}<g class="a-bob"><g ${S}><line x1="18" y1="44" x2="15" y2="53"/><line x1="30" y1="44" x2="27" y2="53"/><line x1="42" y1="44" x2="39" y2="53"/></g></g>`;
+  else if(k==='storm') g=`${cloud(4,-2,'#A8D3E6')}<path class="a-tw" d="M30 40 l-7 11 h7 l-4 9 l11-13 h-7 l4-7 z" fill="#F6D27A" ${S}/>`;
+  else if(k==='snow') g=`${cloud(4,-2)}<g fill="#A8D3E6" ${S}><circle cx="18" cy="49" r="3"/><circle cx="30" cy="53" r="3"/><circle cx="42" cy="49" r="3"/></g>`;
+  return `<svg viewBox="0 0 60 62" aria-hidden="true">${g}</svg>`;
+}
+function wxRow(c, place, temp, rain, extra){
+  const [,desc]=WMO(c);
+  return `<div class="wxrow">
+    <span class="wxi" role="img" aria-label="${desc}">${wxIcon(c)}</span>
+    <div class="wxcols">
+      <div><small>地點</small><b>${place}</b></div>
+      <div><small>溫度</small><b>${temp}</b></div>
+      <div><small>降雨</small><b>${rain}</b></div>
+    </div>
+  </div>${extra||''}`;
+}
+function renderNow(){
+  const box = document.getElementById('wx-now');
+  const X = WX && WX.by.xc, c = X && X.current;
+  if (!c){
+    box.innerHTML = `<div class="wxfoot"><span>🌥️ 目前無法載入天氣（放到 github.io 上就會顯示）</span><button type="button" id="wx-re">重試</button></div>`;
+  } else {
+    const today = X.daily && X.daily.precipitation_probability_max ? X.daily.precipitation_probability_max[0] : null;
+    const [,desc] = WMO(c.weather_code);
+    box.innerHTML = wxRow(c.weather_code, '新城・飯店', `${Math.round(c.temperature_2m)}°C`, today!=null?today+'%':'—',
+      `<div class="wxfoot"><span>現在 ${desc}・更新 ${ago(WX.at)}${WXERR?'（離線）':''}</span><button type="button" id="wx-re">更新</button></div>`);
+  }
+  document.getElementById('wx-re').onclick = async () => { await loadWx(true); renderNow(); renderDayWx(curDay()); };
+}
+function curDay(){ const b=[...document.querySelectorAll('.tabs button')].findIndex(x=>x.getAttribute('aria-selected')==='true'); return b<0?0:b; }
+function renderDayWx(i){
+  const box = document.getElementById('daywx'); if (!box) return;
+  const dw = DAYWX[i];
+  if (!WX){ box.innerHTML = ''; return; }
+  box.innerHTML = dw.locs.map(k => {
+    const L = LOCS.find(l=>l.k===k), d = WX.by[k] && WX.by[k].daily;
+    const idx = d ? d.time.indexOf(dw.date) : -1;
+    if (idx < 0){
+      const days = Math.ceil((new Date(dw.date+'T00:00:00+08:00') - Date.now())/864e5) - 15;
+      return `<div class="wxchip"><div class="wxfoot"><span>🔮 <b>${L.n}</b>｜預報還沒出來${days>0?`，約 ${days} 天後可看`:''}</span></div></div>`;
+    }
+    const rain = d.precipitation_probability_max[idx];
+    const sun = k==='xc' ? `<div class="wxfoot"><span>🌅 日出 ${hhmm(d.sunrise[idx])}・🌇 日落 ${hhmm(d.sunset[idx])}</span></div>` : '';
+    return `<div class="wxchip">${wxRow(d.weather_code[idx], L.n, `${Math.round(d.temperature_2m_min[idx])}–${Math.round(d.temperature_2m_max[idx])}°`, rain!=null?rain+'%':'—', sun)}</div>`;
+  }).join('');
+}
+(async () => { await loadWx(false); renderNow(); renderDayWx(curDay()); })();
 
 /* ---------- countdown ---------- */
 const DEPART = new Date('2026-12-04T09:00:00+08:00').getTime();
@@ -507,7 +645,7 @@ function renderDay(i){
     </li>`).join('');
   const box = document.getElementById('day');
   box.innerHTML = `
-    <div class="card dayhead">${ART[i]}<div class="t">${esc(d.title)}</div></div>
+    <div class="card dayhead">${ART[i]}<div class="t">${esc(d.title)}</div><div class="daywx" id="daywx"></div></div>
     <ul class="tl">${items}</ul>
     <div class="daynav">
       ${i>0?`<button data-go="${i-1}">← 昨天<small>${esc(DAYS[i-1].short)}</small></button>`:'<span></span>'}
@@ -520,6 +658,7 @@ function renderDay(i){
   box.classList.remove('boing'); void box.offsetWidth; box.classList.add('boing');
   document.querySelectorAll('.tabs button').forEach((b,j)=>b.setAttribute('aria-selected', j===i));
   store.set('hl-day', i);
+  renderDayWx(i);
 }
 document.querySelectorAll('.tabs button').forEach(b => b.addEventListener('click', () => renderDay(+b.dataset.day)));
 const startDay = store.get('hl-day');
