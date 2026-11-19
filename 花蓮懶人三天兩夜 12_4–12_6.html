@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>花蓮懶人三天兩夜 12/4–12/6</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Huninn&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FFFCF6; --ink:#3E3A39;
+  --coral:#F2A497; --yellow:#F6D27A; --water:#A8D3E6; --green:#B9DAA5;
+  --soft:#F4EEE4;
+  --r:22px; --line:3px solid var(--ink);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth; scroll-padding-top:calc(76px + env(safe-area-inset-top))}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:"Huninn",-apple-system,"PingFang TC",sans-serif;
+  font-size:16px; line-height:1.6;
+  padding:calc(72px + env(safe-area-inset-top)) calc(14px + env(safe-area-inset-right)) calc(40px + env(safe-area-inset-bottom)) calc(14px + env(safe-area-inset-left));
+}
+main{max-width:460px;margin:0 auto}
+a{color:inherit}
+
+/* top menu */
+.topbar{
+  position:fixed; inset:0 0 auto 0; z-index:10;
+  background:var(--paper); border-bottom:var(--line);
+  padding:calc(8px + env(safe-area-inset-top)) 10px 8px;
+}
+.topbar nav{max-width:460px;margin:0 auto;display:flex;gap:6px}
+.topbar a{
+  flex:1; text-align:center; text-decoration:none; font-size:15px;
+  padding:7px 0; border:var(--line); border-radius:999px; background:#fff;
+}
+.topbar a:nth-child(1){background:var(--coral)}
+.topbar a:nth-child(2){background:var(--yellow)}
+.topbar a:nth-child(3){background:var(--water)}
+.topbar a:nth-child(4){background:var(--green)}
+
+.card{background:#fff;border:var(--line);border-radius:var(--r);padding:14px 16px;margin:14px 0}
+h2{font-size:22px;margin:30px 0 6px;display:flex;align-items:center;gap:8px}
+h2 .dot{width:14px;height:14px;border-radius:50%;border:var(--line);display:inline-block}
+h3{font-size:18px;margin:0 0 8px}
+
+/* hero */
+.hero{padding:0;overflow:hidden;background:var(--paper)}
+.hero svg{display:block;width:100%;height:auto;border-bottom:var(--line)}
+.hero .txt{padding:14px 16px 16px;text-align:center}
+.hero h1{font-size:26px;margin:0;letter-spacing:1px}
+.hero .sub{font-size:14px;opacity:.75}
+.count{display:flex;gap:8px;justify-content:center;margin-top:12px}
+.count div{min-width:64px;border:var(--line);border-radius:16px;padding:6px 4px;background:var(--yellow)}
+.count div:nth-child(2){background:var(--water)}
+.count div:nth-child(3){background:var(--green)}
+.count b{display:block;font-size:24px;line-height:1.1}
+.count span{font-size:12px}
+
+/* day tabs */
+.tabs{display:flex;gap:8px;margin:10px 0}
+.tabs button{
+  flex:1;font:inherit;color:var(--ink);background:#fff;border:var(--line);
+  border-radius:18px;padding:8px 0 6px;cursor:pointer;line-height:1.25
+}
+.tabs button small{display:block;font-size:12px;opacity:.7}
+.tabs button[aria-selected="true"]{background:var(--coral)}
+.tabs button[aria-selected="true"]:nth-child(2){background:var(--yellow)}
+.tabs button[aria-selected="true"]:nth-child(3){background:var(--water)}
+
+.dayhead{padding:0;overflow:hidden}
+.dayhead svg{display:block;width:100%;height:auto;border-bottom:var(--line)}
+.dayhead .t{padding:10px 16px 12px;font-size:17px}
+
+/* timeline */
+.tl{list-style:none;margin:6px 0 0;padding:0 0 0 22px;position:relative}
+.tl::before{content:"";position:absolute;left:8px;top:6px;bottom:6px;border-left:3px dashed var(--ink)}
+.tl > li{position:relative;margin:0 0 14px}
+.tl > li::before{
+  content:"";position:absolute;left:-21px;top:16px;width:14px;height:14px;
+  border-radius:50%;background:var(--paper);border:var(--line)
+}
+.tl > li.go::before{background:var(--coral)}
+.item{background:#fff;border:var(--line);border-radius:18px;padding:10px 12px}
+.time{font-size:14px;opacity:.8}
+.name{font-size:17px;font-weight:700}
+.name a{text-decoration:none;border-bottom:2px dotted var(--ink)}
+.name a::after{content:" 📍";font-size:13px}
+.note{font-size:14px;opacity:.85}
+.hours{display:inline-block;font-size:13px;margin-top:4px;padding:1px 8px;border-radius:999px;background:var(--soft);border:2px solid var(--ink)}
+.subitem{margin-top:8px;padding:8px 10px;border:2px dashed var(--ink);border-radius:14px}
+.tag{display:inline-block;font-size:12px;padding:0 8px;border:2px solid var(--ink);border-radius:999px;margin:0 4px 2px 0;vertical-align:1px;white-space:nowrap}
+.t-car{background:var(--water)} .t-walk{background:var(--green)}
+.t-opt{background:var(--yellow)} .t-main{background:var(--coral)} .t-alt{background:#fff}
+.t-eat{background:#FBE3DD}
+
+.daynav{display:flex;justify-content:space-between;gap:10px;margin:4px 0 8px}
+.daynav button{font:inherit;color:var(--ink);background:var(--yellow);border:var(--line);border-radius:18px;padding:8px 14px 6px;cursor:pointer;line-height:1.25;min-width:44%}
+.daynav button:last-child{background:var(--water)}
+.daynav button small{display:block;font-size:12px;opacity:.75}
+.daynav span{min-width:44%}
+/* checklists */
+.nobring{background:#FBE3DD}
+.nobring .prog i{background:var(--coral)}
+
+.check{list-style:none;margin:0;padding:0}
+.check li{margin:6px 0}
+.check label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.check input{
+  appearance:none;-webkit-appearance:none;flex:none;margin-top:2px;
+  width:22px;height:22px;border:var(--line);border-radius:8px;background:#fff;display:grid;place-items:center
+}
+.check input:checked{background:var(--green)}
+.check input:checked::after{content:"✓";font-size:15px;line-height:1;font-weight:700}
+.check input:checked + span{text-decoration:line-through;opacity:.55}
+.prog{height:12px;border:var(--line);border-radius:999px;overflow:hidden;margin:4px 0 10px;background:#fff}
+.prog i{display:block;height:100%;width:0;background:var(--yellow);transition:width .3s}
+.cat{font-size:14px;margin:10px 0 2px;opacity:.75}
+
+.stay dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:15px}
+.stay dt{opacity:.7}
+.stay dd{margin:0}
+.btn{display:inline-block;margin-top:10px;padding:6px 14px;border:var(--line);border-radius:999px;background:var(--coral);text-decoration:none;font-size:15px}
+.tips{font-size:14px}
+footer{text-align:center;font-size:12px;opacity:.6;margin-top:24px}
+
+
+/* ===== decorations ===== */
+body{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='260'%3E%3Ccircle cx='20' cy='30' r='3' fill='%23F2A497'/%3E%3Ccircle cx='180' cy='70' r='3' fill='%23A8D3E6'/%3E%3Ccircle cx='110' cy='200' r='3' fill='%23B9DAA5'/%3E%3Ccircle cx='60' cy='140' r='2.5' fill='%23F6D27A'/%3E%3Cpath d='M150 160 l3 7 l7 3 l-7 3 l-3 7 l-3-7 l-7-3 l7-3 z' fill='%23F6D27A'/%3E%3Cpath d='M40 230 l2 5 l5 2 l-5 2 l-2 5 l-2-5 l-5-2 l5-2 z' fill='%23F2A497'/%3E%3C/svg%3E");background-attachment:fixed}
+.wave{height:12px;margin:26px 30px 0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='12'%3E%3Cpath d='M0 6 q10-8 20 0 t20 0' fill='none' stroke='%233E3A39' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E") repeat-x center/40px 12px;opacity:.35}
+h2 .ico{width:34px;height:34px;flex:none}
+h2 .ico svg{width:100%;height:100%;display:block}
+h2 .deco{margin-left:auto;font-size:14px;opacity:.6;letter-spacing:2px}
+.card{position:relative}
+.tape{position:absolute;top:-12px;left:50%;width:74px;height:22px;transform:translateX(-50%) rotate(-3deg);
+  border:2.5px solid var(--ink);border-radius:4px;background:var(--yellow);z-index:2;
+  background-image:repeating-linear-gradient(90deg,transparent 0 8px,rgba(255,255,255,.55) 8px 14px)}
+.tape.c{background-color:var(--coral)} .tape.w{background-color:var(--water)} .tape.g{background-color:var(--green)}
+.tape.r{transform:translateX(-50%) rotate(4deg);left:72%} .tape.l{left:24%}
+.corner{position:absolute;right:10px;top:10px;width:30px;height:30px;pointer-events:none}
+.check input:checked{animation:pop .3s ease}
+@keyframes pop{0%{transform:scale(.7)}60%{transform:scale(1.15)}100%{transform:none}}
+.tl > li.go::before{background:var(--coral)}
+.item:hover{transform:translateY(-1px)}
+.endart{display:block;width:180px;margin:24px auto 0}
+footer{font-size:14px;opacity:.8}
+.hero .txt h1::before,.hero .txt h1::after{content:"✿";color:var(--coral);font-size:18px;margin:0 8px;vertical-align:4px}
+.hero .txt h1::after{color:var(--water)}
+
+/* motion */
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes sway{0%,100%{transform:translateX(0)}50%{transform:translateX(6px)}}
+@keyframes drive{0%{transform:translateX(-30px)}100%{transform:translateX(30px)}}
+@keyframes twinkle{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes boing{0%{transform:scale(.92) translateY(10px);opacity:0}55%{transform:scale(1.03) translateY(-4px);opacity:1}80%{transform:scale(.99)}100%{transform:none}}
+.a-bob{animation:bob 3s ease-in-out infinite;transform-box:fill-box}
+.a-sway{animation:sway 5s ease-in-out infinite;transform-box:fill-box}
+.a-drive{animation:drive 4s ease-in-out infinite alternate;transform-box:fill-box}
+.a-tw{animation:twinkle 2.4s ease-in-out infinite}
+.a-spin{animation:spin 30s linear infinite;transform-box:fill-box;transform-origin:center}
+.boing{animation:boing .55s cubic-bezier(.3,1.4,.5,1)}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <nav aria-label="主選單">
+    <a href="#home">首頁</a>
+    <a href="#plan">行程</a>
+    <a href="#lists">清單</a>
+    <a href="#stay">住宿</a>
+  </nav>
+</header>
+
+<main>
+
+<!-- ============ HOME ============ -->
+<section id="home" class="card hero">
+  <svg viewBox="0 0 360 210" role="img" aria-label="花蓮海岸：太陽、山、海浪與小車">
+    <rect width="360" height="210" fill="#FFFCF6"/>
+    <!-- sun -->
+    <g class="a-spin">
+      <g stroke="#3E3A39" stroke-width="3" stroke-linecap="round">
+        <line x1="290" y1="14" x2="290" y2="24"/><line x1="290" y1="80" x2="290" y2="90"/>
+        <line x1="252" y1="52" x2="262" y2="52"/><line x1="318" y1="52" x2="328" y2="52"/>
+        <line x1="263" y1="25" x2="270" y2="32"/><line x1="310" y1="72" x2="317" y2="79"/>
+        <line x1="317" y1="25" x2="310" y2="32"/><line x1="263" y1="79" x2="270" y2="72"/>
+      </g>
+    </g>
+    <circle cx="290" cy="52" r="20" fill="#F6D27A" stroke="#3E3A39" stroke-width="3"/>
+    <!-- clouds -->
+    <g class="a-sway">
+      <path d="M40 50 q0-14 16-14 q6-12 20-6 q14-4 16 10 q10 2 8 10 z" fill="#fff" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"/>
+    </g>
+    <!-- mountains / cliff -->
+    <path d="M-5 150 L60 70 L95 110 L140 55 L200 150 Z" fill="#B9DAA5" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M125 75 l15-20 l12 16 l-8 -2 l-6 6 l-6 -5 z" fill="#fff" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"/>
+    <!-- road -->
+    <path d="M-5 158 Q120 140 220 150" fill="none" stroke="#3E3A39" stroke-width="3"/>
+    <!-- sea -->
+    <path d="M-5 150 Q30 142 60 150 T120 150 T180 150 T240 150 T300 150 T365 150 V215 H-5 Z" fill="#A8D3E6" stroke="#3E3A39" stroke-width="3"/>
+    <g class="a-bob">
+      <path d="M20 180 q12-8 24 0 t24 0" fill="none" stroke="#3E3A39" stroke-width="3" stroke-linecap="round"/>
+      <path d="M220 172 q12-8 24 0 t24 0" fill="none" stroke="#3E3A39" stroke-width="3" stroke-linecap="round"/>
+      <path d="M120 195 q12-8 24 0 t24 0" fill="none" stroke="#3E3A39" stroke-width="3" stroke-linecap="round"/>
+    </g>
+    <!-- car -->
+    <g class="a-drive">
+      <g transform="translate(90 120)">
+        <path d="M0 22 v-10 q0-6 6-6 h8 l8-10 h22 l8 10 h6 q6 0 6 6 v10 z" fill="#F2A497" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M24 6 l5-6 h12 l5 6 z" fill="#fff" stroke="#3E3A39" stroke-width="2.5" stroke-linejoin="round"/>
+        <circle cx="16" cy="23" r="6" fill="#fff" stroke="#3E3A39" stroke-width="3"/>
+        <circle cx="48" cy="23" r="6" fill="#fff" stroke="#3E3A39" stroke-width="3"/>
+      </g>
+    </g>
+    <!-- gull -->
+    <path class="a-bob" d="M200 40 q8-8 14 0 q6-8 14 0" fill="none" stroke="#3E3A39" stroke-width="3" stroke-linecap="round"/>
+  </svg>
+  <div class="txt">
+    <h1>花蓮懶人三天兩夜</h1>
+    <div class="sub">12/4（五）– 12/6（日）・慢慢來、不趕路</div>
+    <div class="count" id="count" aria-live="polite">
+      <div><b id="cd-d">–</b><span>天</span></div>
+      <div><b id="cd-h">–</b><span>小時</span></div>
+      <div><b id="cd-m">–</b><span>分鐘</span></div>
+    </div>
+    <div class="sub" id="cd-note" style="margin-top:8px">距離 12/4 早上 9:00 出發</div>
+  </div>
+</section>
+
+<!-- ============ PLAN ============ -->
+<section id="plan">
+  <div class="wave" aria-hidden="true"></div>
+  <h2><span class="ico" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M6 26 v-6 q0-4 4-4 h4 l5-6 h12 l4 6 q3 0 3 4 v6 z" fill="#F2A497" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><circle cx="13" cy="27" r="4" fill="#fff" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><circle cx="29" cy="27" r="4" fill="#fff" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/></svg></span>每日行程<span class="deco" aria-hidden="true">～ ♪</span></h2>
+  <div class="tabs" role="tablist" aria-label="選擇日期">
+    <button role="tab" aria-selected="true" data-day="0">12/4 五<small>出發入住</small></button>
+    <button role="tab" aria-selected="false" data-day="1">12/5 六<small>壽豐悠閒</small></button>
+    <button role="tab" aria-selected="false" data-day="2">12/6 日<small>看海回家</small></button>
+  </div>
+  <div id="day" role="tabpanel"></div>
+</section>
+
+<!-- ============ LISTS ============ -->
+<section id="lists">
+  <div class="wave" aria-hidden="true"></div>
+  <h2><span class="ico" aria-hidden="true"><svg viewBox="0 0 40 40"><rect x="8" y="6" width="24" height="30" rx="4" fill="#fff" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><rect x="14" y="3" width="12" height="7" rx="3" fill="#A8D3E6" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><path d="M13 19 l3 3 l6-6" fill="none" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><line x1="13" y1="29" x2="27" y2="29" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/></svg></span>清單<span class="deco" aria-hidden="true">✓ ✓</span></h2>
+
+  <div class="card"><span class="tape c l" aria-hidden="true"></span>
+    <h3>✿ 旅途待辦</h3>
+    <div class="prog"><i data-prog="todo"></i></div>
+    <ul class="check" data-list="todo"></ul>
+  </div>
+
+  <div class="card"><span class="tape w r" aria-hidden="true"></span>
+    <svg class="corner a-tw" viewBox="0 0 30 30" aria-hidden="true"><path d="M15 3 l3 8 l9 1 l-7 6 l2 9 l-7-5 l-7 5 l2-9 l-7-6 l9-1 z" fill="#F6D27A" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/></svg>
+    <h3>✎ 出發前</h3>
+    <div class="prog"><i data-prog="before"></i></div>
+    <ul class="check" data-list="before"></ul>
+  </div>
+
+  <div class="card"><span class="tape g" aria-hidden="true"></span>
+    <svg class="corner a-bob" viewBox="0 0 30 30" aria-hidden="true"><path d="M15 26 L4 12 q11-12 22 0 Z" fill="#F2A497" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><line x1="15" y1="26" x2="10" y2="9" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><line x1="15" y1="26" x2="20" y2="9" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/></svg>
+    <h3>🧳 行李</h3>
+    <div class="prog"><i data-prog="pack"></i></div>
+    <div data-list-wrap="pack"></div>
+  </div>
+
+  <div class="card nobring"><span class="tape l" aria-hidden="true"></span>
+    <h3>🙅 不要帶的東西</h3>
+    <div class="note" style="margin-bottom:6px">出門前勾掉，代表已經放下了</div>
+    <div class="prog"><i data-prog="nobring"></i></div>
+    <ul class="check" data-list="nobring"></ul>
+  </div>
+</section>
+
+<!-- ============ STAY ============ -->
+<section id="stay">
+  <div class="wave" aria-hidden="true"></div>
+  <h2><span class="ico" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M6 18 L20 7 L34 18 V34 H6 Z" fill="#B9DAA5" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><rect x="16" y="23" width="8" height="11" rx="2" fill="#fff" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><circle cx="31" cy="8" r="3" fill="#F6D27A" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/></svg></span>住宿資訊<span class="deco" aria-hidden="true">☾ ✧</span></h2>
+  <div class="card stay" style="padding:0;overflow:hidden">
+    <svg viewBox="0 0 360 120" role="img" aria-label="海邊飯店與泳池" style="display:block;width:100%;height:auto;border-bottom:3px solid #3E3A39">
+      <rect width="360" height="120" fill="#FFFCF6"/>
+      <circle class="a-tw" cx="40" cy="22" r="3" fill="#F6D27A" stroke="#3E3A39" stroke-width="2"/>
+      <circle class="a-tw" cx="90" cy="14" r="2.5" fill="#F6D27A" stroke="#3E3A39" stroke-width="2" style="animation-delay:.8s"/>
+      <circle class="a-tw" cx="320" cy="20" r="3" fill="#F6D27A" stroke="#3E3A39" stroke-width="2" style="animation-delay:1.4s"/>
+      <path d="M300 40 a16 16 0 1 0 14 22 a12 12 0 1 1 -14 -22 z" fill="#F6D27A" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"/>
+      <rect x="110" y="34" width="140" height="62" rx="10" fill="#fff" stroke="#3E3A39" stroke-width="3"/>
+      <g fill="#A8D3E6" stroke="#3E3A39" stroke-width="2.5">
+        <rect x="124" y="46" width="22" height="16" rx="4"/><rect x="156" y="46" width="22" height="16" rx="4"/>
+        <rect x="188" y="46" width="22" height="16" rx="4"/><rect x="220" y="46" width="18" height="16" rx="4"/>
+        <rect x="124" y="70" width="22" height="16" rx="4"/><rect x="156" y="70" width="22" height="16" rx="4"/>
+        <rect x="188" y="70" width="22" height="16" rx="4"/><rect x="220" y="70" width="18" height="16" rx="4"/>
+      </g>
+      <path d="M-5 100 Q40 92 80 100 T160 100 T240 100 T320 100 T365 100 V125 H-5 Z" fill="#A8D3E6" stroke="#3E3A39" stroke-width="3"/>
+      <rect x="50" y="88" width="50" height="10" rx="5" fill="#B9DAA5" stroke="#3E3A39" stroke-width="2.5"/>
+    </svg>
+    <div style="padding:14px 16px">
+      <h3>煙波大飯店 花蓮太魯閣－沁海館</h3>
+      <dl>
+        <dt>日期</dt><dd>12/4（五）– 12/6（日）2 晚</dd>
+        <dt>入住</dt><dd>15:00</dd>
+        <dt>退房</dt><dd>11:00</dd>
+        <dt>電話</dt><dd>03-910-9550</dd>
+        <dt>地址</dt><dd>花蓮縣新城鄉順安村草林10之6號</dd>
+        <dt>早餐</dt><dd>飯店自助早餐（可吃可不吃）</dd>
+        <dt>晚餐</dt><dd>12/4 晚上在漫饗食堂</dd>
+        <dt>周邊</dt><dd>走路就到曼波海灘；無邊際泳池</dd>
+      </dl>
+      <a class="btn" href="https://www.google.com/maps/search/?api=1&query=%E7%85%99%E6%B3%A2%E8%8A%B1%E8%93%AE%E5%A4%AA%E9%AD%AF%E9%96%A3%E6%B2%81%E6%B5%B7%E9%A4%A8&query_place_id=ChIJjygVNAInZjQRyTHzV0JlNlk">📍 Google 地圖</a>
+    </div>
+  </div>
+
+  <div class="card tips"><span class="tape w r" aria-hidden="true"></span>
+    <h3>✧ 小提醒</h3>
+    ・週日下午國5北上容易塞，14:00 前離開清水斷崖，或吃完晚餐再走<br>
+    ・營業時間依 Google 商家資訊，小店偶有臨時公休，出發前一天再看 IG／粉專<br>
+    ・海邊晚上風大，看星星帶擋風外套和手電筒，別靠近浪邊
+  </div>
+</section>
+
+<svg class="endart" viewBox="0 0 180 90" role="img" aria-label="海上的小鯨魚">
+  <path d="M0 66 Q22 58 45 66 T90 66 T135 66 T180 66 V90 H0 Z" fill="#A8D3E6" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+  <g class="a-bob">
+    <path d="M50 62 q0-26 34-26 q30 0 36 22 l16-12 q-2 14 -8 18 q6 4 8 18 l-16-10 q-8 8 -36 8 q-34 0 -34-18 z" fill="#A8D3E6" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="70" cy="52" r="3" fill="#3E3A39"/>
+    <ellipse cx="64" cy="60" rx="5" ry="3" fill="#F2A497"/>
+    <path d="M80 34 q-2-10 -8-12 M80 34 q2-10 8-12 M80 34 v-12" fill="none" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+  </g>
+</svg>
+<footer>✿ 祝旅途愉快・慢慢玩 ✿</footer>
+</main>
+
+<script>
+/* ---------- helpers ---------- */
+const MAP = (name, id) => id
+  ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name)}&query_place_id=${id}`
+  : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name)}`;
+const store = {
+  get(k){ try{ return JSON.parse(localStorage.getItem(k)); }catch(e){ return null; } },
+  set(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+};
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ---------- countdown ---------- */
+const DEPART = new Date('2026-12-04T09:00:00+08:00').getTime();
+function tick(){
+  let ms = DEPART - Date.now();
+  if (ms <= 0){
+    document.getElementById('count').innerHTML = '<div style="min-width:180px"><b>出發囉！</b><span>一路順風 ♪</span></div>';
+    document.getElementById('cd-note').textContent = '';
+    return;
+  }
+  const d = Math.floor(ms/864e5); ms -= d*864e5;
+  const h = Math.floor(ms/36e5);  ms -= h*36e5;
+  const m = Math.floor(ms/6e4);
+  document.getElementById('cd-d').textContent = d;
+  document.getElementById('cd-h').textContent = h;
+  document.getElementById('cd-m').textContent = m;
+}
+tick(); setInterval(tick, 30000);
+
+/* ---------- day illustrations ---------- */
+const S = 'stroke="#3E3A39" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"';
+const ART = [
+/* Day1: 南方澳漁港 + 漁船 + 米糕碗 */
+`<svg viewBox="0 0 360 150" role="img" aria-label="南方澳漁港與漁船">
+  <rect width="360" height="150" fill="#FFFCF6"/>
+  <path d="M-5 70 L50 30 L90 60 L130 25 L180 70 Z" fill="#B9DAA5" ${S}/>
+  <path d="M170 70 q60-70 120 0" fill="none" ${S}/>
+  <line x1="200" y1="70" x2="200" y2="45" ${S}/><line x1="230" y1="70" x2="230" y2="32" ${S}/><line x1="260" y1="70" x2="260" y2="45" ${S}/>
+  <path d="M-5 70 H365 V155 H-5 Z" fill="#A8D3E6" ${S}/>
+  <g class="a-bob">
+    <path d="M60 100 h90 l-12 22 h-66 z" fill="#F2A497" ${S}/>
+    <rect x="88" y="80" width="30" height="20" rx="4" fill="#fff" ${S}/>
+    <line x1="130" y1="100" x2="130" y2="66" ${S}/><path d="M130 68 l18 8 l-18 6 z" fill="#F6D27A" ${S}/>
+  </g>
+  <g class="a-bob" style="animation-delay:1s">
+    <path d="M230 112 q12-8 24 0 t24 0" fill="none" ${S}/>
+  </g>
+  <g transform="translate(290 95)">
+    <path d="M0 0 h50 q-4 26 -25 26 q-21 0 -25 -26 z" fill="#fff" ${S}/>
+    <path d="M6 0 q19 -18 38 0" fill="#F6D27A" ${S}/>
+    <g class="a-tw"><path d="M18 -26 q-4 -6 0 -12" fill="none" ${S}/><path d="M30 -26 q4 -6 0 -12" fill="none" ${S}/></g>
+  </g>
+</svg>`,
+/* Day2: 木瓜溪 + 山 + 蛋糕 */
+`<svg viewBox="0 0 360 150" role="img" aria-label="木瓜溪河谷、山與甜點">
+  <rect width="360" height="150" fill="#FFFCF6"/>
+  <g class="a-sway"><path d="M240 30 q0-12 14-12 q6-10 18-4 q12-2 13 9 q9 2 7 7 z" fill="#fff" ${S}/></g>
+  <path d="M-5 120 L50 40 L95 90 L150 20 L215 110 L260 60 L365 120 Z" fill="#B9DAA5" ${S}/>
+  <path d="M136 38 l14 -18 l12 16 l-7 -1 l-5 5 l-6 -4 z" fill="#fff" ${S}/>
+  <path d="M90 155 Q140 110 170 118 T260 104 L280 104 Q230 120 200 128 T150 155 Z" fill="#A8D3E6" ${S}/>
+  <rect x="30" y="98" width="44" height="10" rx="3" fill="#F6D27A" ${S}/>
+  <line x1="36" y1="108" x2="36" y2="122" ${S}/><line x1="68" y1="108" x2="68" y2="122" ${S}/>
+  <g class="a-bob" transform="translate(286 92)">
+    <path d="M0 40 v-24 h48 v24 z" fill="#F6D27A" ${S}/>
+    <path d="M0 16 q8 8 16 0 q8 8 16 0 q8 8 16 0 v-8 h-48 z" fill="#fff" ${S}/>
+    <circle cx="24" cy="2" r="6" fill="#F2A497" ${S}/>
+  </g>
+</svg>`,
+/* Day3: 日出 + 清水斷崖 + 檸檬汁 */
+`<svg viewBox="0 0 360 150" role="img" aria-label="海上日出、清水斷崖與檸檬汁">
+  <rect width="360" height="150" fill="#FFFCF6"/>
+  <g class="a-bob"><circle cx="210" cy="82" r="26" fill="#F2A497" ${S}/></g>
+  <g stroke="#3E3A39" stroke-width="3" stroke-linecap="round">
+    <line x1="210" y1="34" x2="210" y2="44"/><line x1="170" y1="50" x2="177" y2="57"/><line x1="250" y1="50" x2="243" y2="57"/>
+  </g>
+  <path d="M-5 150 V30 L30 22 L40 50 L60 40 L80 150 Z" fill="#B9DAA5" ${S}/>
+  <line x1="18" y1="60" x2="30" y2="110" ${S}/><line x1="44" y1="70" x2="54" y2="120" ${S}/>
+  <path d="M60 86 H365 V155 H60 Z" fill="#A8D3E6" ${S}/>
+  <g class="a-bob" style="animation-delay:.6s">
+    <path d="M120 112 q12-8 24 0 t24 0" fill="none" ${S}/>
+    <path d="M230 124 q12-8 24 0 t24 0" fill="none" ${S}/>
+  </g>
+  <g transform="translate(300 66)" class="a-bob" style="animation-delay:1.2s">
+    <path d="M0 0 h36 l-5 54 h-26 z" fill="#F6D27A" ${S}/>
+    <line x1="24" y1="0" x2="32" y2="-18" ${S}/>
+    <circle cx="8" cy="0" r="9" fill="#B9DAA5" ${S}/>
+  </g>
+</svg>`
+];
+
+/* ---------- itinerary data ---------- */
+const T = {
+  car:  t => ({c:'t-car',  t:'🚗 '+t}),
+  walk: t => ({c:'t-walk', t:'🚶 '+t}),
+  opt:  {c:'t-opt',  t:'選配'},
+  main: {c:'t-main', t:'主要'},
+  alt:  {c:'t-alt',  t:'備案'},
+  eat:  t => ({c:'t-eat', t:'🍽 '+t})
+};
+const DAYS = [
+ { short:'12/4 五・出發入住', title:'12/4（五）台北 → 南方澳 → 入住', items:[
+   {time:'09:00', name:'台北出發', note:'國5 → 蘇澳', tags:[T.car('約 1.5–2 小時')], go:1},
+   {time:'~10:45', name:'南方澳午餐（二選一）', tags:[T.eat('午餐')], subs:[
+     {name:'酒橙榙', id:'ChIJp87WctDpZzQR0nKqrUixB1k', note:'義式海鮮', hours:'11:00–20:00'},
+     {name:'午鯖', id:'ChIJBxwYgKvpZzQRpSoWCB9ZMHE', note:'魚湯定食', hours:'11:00–15:00'}
+   ]},
+   {time:'', name:'蘇澳港廟口廖榮川米糕', id:'ChIJX68xGN7CZzQRNBxvYHkycAc', hours:'10:00–19:30', tags:[T.opt, T.walk('走路就到')]},
+   {time:'~13:00', name:'蘇花改南下', tags:[T.car('約 1.5 小時')], go:1},
+   {time:'~14:30', name:'煙波花蓮太魯閣－沁海館', id:'ChIJjygVNAInZjQRyTHzV0JlNlk', note:'15:00 入住・泡泳池、房間看海', hours:'入住 15:00'},
+   {time:'~16:30', name:'曼波海灘', id:'ChIJjxWCKfonZjQRRnAqILKzvlQ', note:'看傍晚的海', hours:'全天', tags:[T.walk('飯店旁小徑')]},
+   {time:'18:00', name:'飯店晚餐（漫饗食堂）', tags:[T.eat('晚餐')]},
+   {time:'晚餐後', name:'看星星・曼波海灘', id:'ChIJjxWCKfonZjQRRnAqILKzvlQ', note:'帶擋風外套、手電筒', hours:'全天', tags:[T.opt, T.walk('幾分鐘')]}
+ ]},
+ { short:'12/5 六・壽豐悠閒', title:'12/5（六）壽豐悠閒日', items:[
+   {time:'早上', name:'睡飽・飯店早餐可吃可不吃'},
+   {time:'~10:30', name:'出發往壽豐志學', tags:[T.car('約 45 分鐘')], go:1},
+   {time:'~11:15', name:'早午餐（三選一）', tags:[T.eat('早午餐')], subs:[
+     {name:'穀地 Goody brunch & cafe', id:'ChIJ97mzTAChaDQRI_-kDFKBN5U', hours:'10:00–16:00'},
+     {name:'Zero距離早午餐', id:'ChIJuTdhxeCjaDQRswfzjowl290', hours:'08:00–14:00'},
+     {name:':HANG OUT', id:'ChIJhZ4DTGyjaDQRyEzs_eb-KXg', note:'漢堡', hours:'11:30–15:00'}
+   ]},
+   {time:'~13:00', name:'Moon Room 月亮房子手作甜點', id:'ChIJ4fT5UgCjaDQRSVGXfY1dKqM', note:'志學店：中正路210巷6號', hours:'13:00–18:30', tags:[T.walk('同一條路上')]},
+   {time:'~14:30', name:'木瓜溪觀景台', id:'ChIJ1XWcbi2iaDQRil4EwMiWQTE', note:'池南，眺望木瓜溪與遠方市區；路窄慢慢開', hours:'全天', tags:[T.main, T.car('約 15 分鐘')], subs:[
+     {name:'鯉魚潭', id:'ChIJ3eVHa7SjaDQR1K-MKuWZ5S4', note:'繞湖散步', hours:'全天', tag:T.alt},
+     {name:'木瓜溪文物生態故事館', id:'ChIJFeSTP-SjaDQRMoPr6QIbE3E', note:'室內，下雨也 OK', hours:'08:30–12:00、13:00–16:30', tag:T.alt}
+   ]},
+   {time:'~16:45', name:'七星潭', id:'ChIJ9SCI5oedaDQRijf91YB4Ag0', note:'傍晚的海', hours:'全天', tags:[T.car('約 35 分鐘')]},
+   {time:'18:00', name:'龍私廚義法餐廳', id:'ChIJwzP2D9ihaDQR0ZS_9aW1upI', note:'訂位 03-832-0832', hours:'11:30–14:00、17:30–21:00', tags:[T.eat('晚餐'), T.car('約 15 分鐘')]},
+   {time:'~20:00', name:'回飯店', tags:[T.car('約 25 分鐘')], go:1}
+ ]},
+ { short:'12/6 日・看海回家', title:'12/6（日）退房 → 看海回台北', items:[
+   {time:'~06:20', name:'看日出（你指定的點）', url:'https://maps.app.goo.gl/9NxNUdUzbSjENd8YA', hours:'全天', tags:[T.opt]},
+   {time:'早上', name:'慢慢吃飯店早餐'},
+   {time:'11:00', name:'退房'},
+   {time:'~11:15', name:'新城博愛路午餐', tags:[T.eat('午餐'), T.car('約 5 分鐘')], subs:[
+     {name:'半天紅麻辣館', id:'ChIJDyoEkUcpZjQRMFeoGnw-L1Y', hours:'11:00–15:00、17:00–20:00'},
+     {name:'佳興冰菓店（檸檬汁）', id:'ChIJEewCSG0oZjQRxWPvxAF0Sk4', note:'就在附近', hours:'08:00–17:00', tag:T.walk('走路')}
+   ]},
+   {time:'~12:30', name:'坂下海灘', id:'ChIJQ7Cm8nMpZjQRNW3igJqiOWw', hours:'全天', tags:[T.car('約 15 分鐘')]},
+   {time:'~13:15', name:'清水斷崖（崇德）', id:'ChIJI327WbwrZjQRS4-WgIH1GAQ', note:'停崇德休憩區／小清水觀景台', hours:'全天', tags:[T.car('約 10 分鐘')]},
+   {time:'~14:00', name:'北上回台北', note:'可繞東澳–南澳舊蘇花看東澳灣', tags:[T.car('約 3 小時')], go:1, extra:{name:'東澳灣', q:'東澳灣'}}
+ ]}
+];
+
+/* ---------- render day ---------- */
+const tagHTML = tags => (tags||[]).map(x => `<span class="tag ${x.c}">${esc(x.t)}</span>`).join('');
+const nameHTML = o => {
+  const href = o.url || (o.id ? MAP(o.name, o.id) : null);
+  return href ? `<a href="${href}">${esc(o.name)}</a>` : esc(o.name);
+};
+function renderDay(i){
+  const d = DAYS[i];
+  const items = d.items.map(it => `
+    <li class="${it.go?'go':''}">
+      <div class="item">
+        <div class="time">${esc(it.time||'')} ${tagHTML(it.tags)}</div>
+        <div class="name">${nameHTML(it)}</div>
+        ${it.note?`<div class="note">${esc(it.note)}${it.extra?` ・<a href="${MAP(it.extra.q)}">${esc(it.extra.name)} 📍</a>`:''}</div>`:''}
+        ${it.hours?`<span class="hours">🕒 ${esc(it.hours)}</span>`:''}
+        ${(it.subs||[]).map(s => `
+          <div class="subitem">
+            ${s.tag?tagHTML([s.tag]):''}
+            <div class="name">${nameHTML(s)}</div>
+            ${s.note?`<div class="note">${esc(s.note)}</div>`:''}
+            ${s.hours?`<span class="hours">🕒 ${esc(s.hours)}</span>`:''}
+          </div>`).join('')}
+      </div>
+    </li>`).join('');
+  const box = document.getElementById('day');
+  box.innerHTML = `
+    <div class="card dayhead">${ART[i]}<div class="t">${esc(d.title)}</div></div>
+    <ul class="tl">${items}</ul>
+    <div class="daynav">
+      ${i>0?`<button data-go="${i-1}">← 昨天<small>${esc(DAYS[i-1].short)}</small></button>`:'<span></span>'}
+      ${i<DAYS.length-1?`<button data-go="${i+1}">明天 →<small>${esc(DAYS[i+1].short)}</small></button>`:'<span></span>'}
+    </div>`;
+  box.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => {
+    renderDay(+b.dataset.go);
+    document.getElementById('plan').scrollIntoView();
+  }));
+  box.classList.remove('boing'); void box.offsetWidth; box.classList.add('boing');
+  document.querySelectorAll('.tabs button').forEach((b,j)=>b.setAttribute('aria-selected', j===i));
+  store.set('hl-day', i);
+}
+document.querySelectorAll('.tabs button').forEach(b => b.addEventListener('click', () => renderDay(+b.dataset.day)));
+const startDay = store.get('hl-day');
+renderDay(Number.isInteger(startDay) && startDay>=0 && startDay<3 ? startDay : 0);
+
+/* ---------- checklists ---------- */
+const LISTS = {
+  todo: [
+    '南方澳吃海鮮午餐','曼波海灘散步','晚上看星星',
+    'Moon Room 吃甜點','木瓜溪觀景台拍照','七星潭看傍晚的海','龍私廚晚餐',
+    '曼波海灘看日出','佳興檸檬汁','坂下海灘','清水斷崖'
+  ],
+  before: [
+    '打給龍私廚訂 12/5 18:00（03-832-0832）','確認 12/4 飯店晚餐',
+    '前一天看 IG／粉專確認店家有沒有臨時公休','查 12/4–12/6 天氣與雲量','查蘇花改／舊蘇花路況',
+    '車子加滿油、檢查胎壓','手機離線地圖下載'
+  ],
+  nobring: ['壓力','別人對你的影響'],
+  pack: {
+    '證件與錢':['身分證／駕照','信用卡、現金','訂房資料'],
+    '衣物':['換洗衣物 ×2','擋風外套（海邊晚上冷）','好走的鞋','泳衣／泳帽','睡衣'],
+    '電子':['手機充電線'],
+    '小物':['露營椅','手電筒（看星星）','薄毯或野餐墊','防曬乳','保溫瓶','常備藥','環保袋'],
+  }
+};
+const saved = store.get('hl-checks') || {};
+function bindList(ul, key, items){
+  ul.innerHTML = items.map((t,i) => {
+    const k = key+':'+t;
+    return `<li><label><input type="checkbox" data-k="${esc(k)}" ${saved[k]?'checked':''}><span>${esc(t)}</span></label></li>`;
+  }).join('');
+}
+['todo','before','nobring'].forEach(k => bindList(document.querySelector(`[data-list="${k}"]`), k, LISTS[k]));
+const packWrap = document.querySelector('[data-list-wrap="pack"]');
+packWrap.innerHTML = Object.keys(LISTS.pack).map(c => `<div class="cat">${esc(c)}</div><ul class="check" data-list="pack-${esc(c)}"></ul>`).join('');
+Object.entries(LISTS.pack).forEach(([c,items]) => bindList(packWrap.querySelector(`[data-list="pack-${c}"]`), 'pack', items));
+
+function updateProg(){
+  ['todo','before','nobring','pack'].forEach(k => {
+    const boxes = [...document.querySelectorAll(`input[data-k^="${k}:"]`)];
+    const done = boxes.filter(b=>b.checked).length;
+    const bar = document.querySelector(`[data-prog="${k}"]`);
+    bar.style.width = boxes.length ? (done/boxes.length*100)+'%' : '0';
+    bar.parentElement.setAttribute('aria-label', `完成 ${done}/${boxes.length}`);
+  });
+}
+document.addEventListener('change', e => {
+  if (e.target.matches('.check input')){
+    saved[e.target.dataset.k] = e.target.checked;
+    store.set('hl-checks', saved);
+    updateProg();
+  }
+});
+updateProg();
+</script>
+</body>
+</html>
